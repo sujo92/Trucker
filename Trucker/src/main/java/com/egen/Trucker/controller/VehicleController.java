@@ -6,16 +6,18 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api")
+@CrossOrigin
 public class VehicleController {
-
+    
     @GetMapping("/vehicles")
     public String vehiclesGetMethod(){
         return "Vehicles are returned";
     }
 
-    @PostMapping("/vehicles")
-    public boolean addVehicle(@RequestBody Vehicle vehicle){
-        System.out.println(vehicle);
+    @PutMapping("/vehicles")
+    public boolean addVehicle(@RequestBody Vehicle[] vehicle){
+        for(Vehicle v: vehicle )
+        System.out.println(v);
         return true;
     }
 }
