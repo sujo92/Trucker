@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class DefaultVehicleService implements VehicleService {
@@ -20,10 +21,10 @@ public class DefaultVehicleService implements VehicleService {
 
     @Override
     public boolean addVehicleData(Vehicle[] vehicle) {
-        System.out.println("service: put vehicles");
+//        System.out.println("service: put vehicles");
         for(Vehicle v: vehicle ) {
             vehicleRepository.save(v);
-            System.out.println(v);
+//            System.out.println(v);
         }
         return true;
     }
@@ -34,5 +35,12 @@ public class DefaultVehicleService implements VehicleService {
         vehicles.sort( Comparator.comparing(Vehicle::getYear));
         return vehicles;
     }
+
+    @Override
+    public Optional<Vehicle> getVehicleByVin(String vin) {
+        Optional<Vehicle> vehicle = vehicleRepository.findById(vin);
+        return vehicle;
+    }
+
 
 }
