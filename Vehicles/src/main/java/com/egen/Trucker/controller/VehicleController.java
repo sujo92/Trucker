@@ -25,8 +25,8 @@ public class VehicleController {
 
     @PutMapping("/vehicles")
     public boolean addVehicle(@RequestBody Vehicle[] vehicles) throws JsonProcessingException {
-//        System.out.println("controller: put vehicles");
-//        vehicleService.addVehicleData(vehicles);
+        System.out.println("controller: put vehicles");
+        vehicleService.addVehicleData(vehicles);
         System.out.println("string:"+vehicles);
         return true;
     }
