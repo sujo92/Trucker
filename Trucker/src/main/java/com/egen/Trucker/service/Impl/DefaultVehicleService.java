@@ -1,21 +1,28 @@
 package com.egen.Trucker.service.Impl;
 
 import com.egen.Trucker.model.Vehicle;
+import com.egen.Trucker.repo.VehicleRepository;
 import com.egen.Trucker.service.VehicleService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Comparator;
-import java.util.LinkedList;
 import java.util.List;
 
 @Service
 public class DefaultVehicleService implements VehicleService {
-    List<Vehicle> vehicleData = new LinkedList<>();
+    VehicleRepository vehicleRepository;
+
+    @Autowired
+    public DefaultVehicleService(VehicleRepository vehicleRepository){
+        this.vehicleRepository = vehicleRepository;
+    }
 
     @Override
     public boolean addVehicleData(Vehicle[] vehicle) {
+        System.out.println("service: put vehicles");
         for(Vehicle v: vehicle ) {
-            vehicleData.add(v);
+            vehicleRepository.save(v);
             System.out.println(v);
         }
         return true;
@@ -23,7 +30,9 @@ public class DefaultVehicleService implements VehicleService {
 
     @Override
     public List<Vehicle> getVehicleDataSorted() {
-        vehicleData.sort( Comparator.comparing(Vehicle::getYear));
-        return vehicleData;
+        List<Vehicle> vehicles = (List<Vehicle>) vehicleRepository.findAll();
+        vehicles.sort( Comparator.comparing(Vehicle::getYear));
+        return vehicles;
     }
+
 }

@@ -7,6 +7,5 @@ import java.util.List;
 public interface VehicleService {
 
     boolean addVehicleData(Vehicle[] vehicle);
-
     List<Vehicle> getVehicleDataSorted();
 }

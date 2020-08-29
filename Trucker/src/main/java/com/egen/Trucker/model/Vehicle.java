@@ -1,28 +1,22 @@
 package com.egen.Trucker.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
 import java.sql.Timestamp;
-//    {
-//        "vin": "1HGCR2F3XFA027534",
-//            "make": "HONDA",
-//            "model": "ACCORD",
-//            "year": 2015,
-//            "redlineRpm": 5500,
-//            "maxFuelVolume": 15,
-//            "lastServiceDate": "2017-05-25T17:31:25.268Z"
-//    }
 
 @Data
-@NoArgsConstructor
+@Entity
 public class Vehicle {
+    @Id
     private String vin;
     private String make;
     private String model;
     private int year;
     private int redlineRpm;
     private int maxFuelVolume;
-    private Timestamp lastServiceDateVin;
-
+    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", timezone="Europe/Berlin")
+    private Timestamp lastServiceDate;
 }

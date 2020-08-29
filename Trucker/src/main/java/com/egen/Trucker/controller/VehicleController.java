@@ -3,6 +3,7 @@ package com.egen.Trucker.controller;
 
 import com.egen.Trucker.model.Vehicle;
 import com.egen.Trucker.service.VehicleService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,14 +21,11 @@ public class VehicleController {
         this.vehicleService= vehicleService;
     }
 
-    @GetMapping("/vehicles")
-    public String vehiclesGetMethod(){
-        return "Vehicles are returned";
-    }
-
     @PutMapping("/vehicles")
-    public boolean addVehicle(@RequestBody Vehicle[] vehicle){
-        vehicleService.addVehicleData(vehicle);
+    public boolean addVehicle(@RequestBody Vehicle[] vehicles) throws JsonProcessingException {
+        System.out.println("controller: put vehicles");
+        vehicleService.addVehicleData(vehicles);
+        System.out.println("string:"+vehicles);
         return true;
     }
 
