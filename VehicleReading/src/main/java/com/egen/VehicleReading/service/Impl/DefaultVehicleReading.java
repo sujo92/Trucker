@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -33,6 +32,15 @@ public class DefaultVehicleReading implements VehicleReadingService {
         vehicleRepository.save(vehicleReading);
         String vin = vehicleReading.getVin();
         Vehicle v = restTemplate.getForObject("http://localhost:8001/api/vehicle/"+vin, Vehicle.class, boolean.class);
+
+    //        Rule rule = new RuleBuilder()
+    //                .name("myRule")
+    //                .description("myRuleDescription")
+    //                .priority(3)
+    //                .when(condition)
+    //                .then(action1)
+    //                .then(action2)
+    //                .build();
 
         if(vehicleReading.getEngineRpm() > v.getRedlineRpm()){
             System.out.println("high: engineRPM above limit");
@@ -106,15 +114,4 @@ public class DefaultVehicleReading implements VehicleReadingService {
         return list;
     }
 
-    @Override
-    public List<Alert> getHistoricalAlertByVin(String vin) {
-        return  alertRepository.findAllAlertsbyVin(vin);
-    }
-
-    @Override
-    public List<Alert> getAllHighAlerts() {
-        List<Alert> alerts = alertRepository.findAllHighAlerts();
-        alerts.sort( Comparator.comparing(Alert::getAlertTime));
-        return alerts;
-    }
 }

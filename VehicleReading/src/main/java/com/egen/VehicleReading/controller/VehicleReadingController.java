@@ -1,8 +1,8 @@
 package com.egen.VehicleReading.controller;
 
-import com.egen.VehicleReading.model.Alert;
 import com.egen.VehicleReading.model.VehicleReading;
 import com.egen.VehicleReading.service.VehicleReadingService;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,6 +20,7 @@ public class VehicleReadingController {
     }
 
     @PostMapping("/reading")
+    @ApiOperation(value = "save reading")
     public boolean saveReading(@RequestBody VehicleReading vehicleReading){
         System.out.println("controller: save reading`");
         vehicleReadingService.saveReading(vehicleReading);
@@ -27,17 +28,8 @@ public class VehicleReadingController {
     }
 
     @GetMapping("/geoLocation/{vin}")
+    @ApiOperation(value = "get vehicles by vin",response= VehicleReading.class, responseContainer = "List")
     public List<VehicleReading> getvehicleLocation(@PathVariable String vin) {
         return vehicleReadingService.getvehicleLocation(vin);
-    }
-
-    @GetMapping("/alerts/{vin}")
-    public List<Alert> getHistoricalAlertByVin(@PathVariable String vin){
-        return vehicleReadingService.getHistoricalAlertByVin(vin);
-    }
-
-    @GetMapping("/highalerts")
-    public List<Alert> getAllHighAlerts(){
-        return vehicleReadingService.getAllHighAlerts();
     }
 }
