@@ -1,11 +1,14 @@
 package com.egen.VehicleReading.service.Impl;
 
-import com.egen.VehicleReading.model.Alert;
 import com.egen.VehicleReading.model.Vehicle;
 import com.egen.VehicleReading.model.VehicleReading;
 import com.egen.VehicleReading.repo.AlertRepository;
 import com.egen.VehicleReading.repo.VehicleRepository;
+import com.egen.VehicleReading.rules.*;
 import com.egen.VehicleReading.service.VehicleReadingService;
+import org.jeasy.rules.api.Facts;
+import org.jeasy.rules.api.Rules;
+import org.jeasy.rules.api.RulesEngine;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -19,6 +22,13 @@ public class DefaultVehicleReading implements VehicleReadingService {
     RestTemplate restTemplate;
 
     @Autowired
+    Facts facts;
+    @Autowired
+    Rules rules;
+    @Autowired
+    RulesEngine rulesEngine;
+
+    @Autowired
     public DefaultVehicleReading(VehicleRepository vehicleRepository, RestTemplate restTemplate,AlertRepository alertRepository){
         this.vehicleRepository = vehicleRepository;
         this.restTemplate = restTemplate;
@@ -28,83 +38,29 @@ public class DefaultVehicleReading implements VehicleReadingService {
 
     @Override
     public boolean saveReading(VehicleReading vehicleReading) {
-        System.out.println(vehicleReading);
+//        System.out.println(vehicleReading);
         vehicleRepository.save(vehicleReading);
         String vin = vehicleReading.getVin();
         Vehicle v = restTemplate.getForObject("http://localhost:8001/api/vehicle/"+vin, Vehicle.class, boolean.class);
 
-    //        Rule rule = new RuleBuilder()
-    //                .name("myRule")
-    //                .description("myRuleDescription")
-    //                .priority(3)
-    //                .when(condition)
-    //                .then(action1)
-    //                .then(action2)
-    //                .build();
+        // define facts
+        facts.put("RedlineRpm", v.getRedlineRpm());
+        facts.put("MaxFuelVolume", v.getMaxFuelVolume()*0.10);
+        facts.put("lowPressureLimit", 32);
+        facts.put("highPressureLimit", 36);
+        facts.put("lightOn", true);
+        facts.put("coolantLight", true);
 
-        if(vehicleReading.getEngineRpm() > v.getRedlineRpm()){
-            System.out.println("high: engineRPM above limit");
-            Alert alert = new Alert();
-            alert.setAlertTime(vehicleReading.getTimestamp());
-            alert.setPriority("High");
-            alert.setAlertdesc("engineRPM above limit");
-            alert.setVin(vehicleReading.getVin());
-            alertRepository.save(alert);
-        }
+        // define rules
+        rules.register(new EngineRpmIncreaseRule(vehicleReading,alertRepository));
+        rules.register(new FuelVolumRule(vehicleReading,alertRepository));
+        rules.register(new LowTirePressureRule(vehicleReading,alertRepository));
+        rules.register(new HighTirePressureRule(vehicleReading,alertRepository));
+        rules.register(new EngineLightOnRule(vehicleReading,alertRepository));
+        rules.register(new EngineCoolantLowRule(vehicleReading,alertRepository));
 
-        if(vehicleReading.getFuelVolume() < v.getMaxFuelVolume()*0.10){
-            System.out.println("medium: fuel volume below 10%");
-            Alert alert = new Alert();
-            alert.setAlertTime(vehicleReading.getTimestamp());
-            alert.setPriority("Medium");
-            alert.setAlertdesc("fuel volume below 10%");
-            alert.setVin(vehicleReading.getVin());
-            alertRepository.save(alert);
-        }
-
-        if(vehicleReading.getTires().getFrontLeft()<32 || vehicleReading.getTires().getFrontRight()<32 ||
-                vehicleReading.getTires().getRearLeft()<32 || vehicleReading.getTires().getRearRight()<32
-        ){
-            System.out.println("medium: tire pressure low");
-            Alert alert = new Alert();
-            alert.setAlertTime(vehicleReading.getTimestamp());
-            alert.setPriority("Medium");
-            alert.setAlertdesc("tire pressure low");
-            alert.setVin(vehicleReading.getVin());
-            alertRepository.save(alert);
-        }
-
-        if(vehicleReading.getTires().getFrontRight() > 36 || vehicleReading.getTires().getFrontRight() > 36 ||
-                vehicleReading.getTires().getRearLeft() > 36 || vehicleReading.getTires().getRearRight() > 36
-        ){
-            System.out.println("medium: tire pressure high");
-            Alert alert = new Alert();
-            alert.setAlertTime(vehicleReading.getTimestamp());
-            alert.setPriority("Medium");
-            alert.setAlertdesc("fuel tire pressure high");
-            alert.setVin(vehicleReading.getVin());
-            alertRepository.save(alert);
-        }
-
-        if(vehicleReading.isCheckEngineLightOn()){
-            System.out.println("Low: engine light on");
-            Alert alert = new Alert();
-            alert.setAlertTime(vehicleReading.getTimestamp());
-            alert.setPriority("Low");
-            alert.setAlertdesc("engine light on");
-            alert.setVin(vehicleReading.getVin());
-            alertRepository.save(alert);
-        }
-
-        if(vehicleReading.isEngineCoolantLow()){
-            System.out.println("Low: engine coolent low");
-            Alert alert = new Alert();
-            alert.setAlertTime(vehicleReading.getTimestamp());
-            alert.setPriority("Low");
-            alert.setAlertdesc("engine coolent low");
-            alert.setVin(vehicleReading.getVin());
-            alertRepository.save(alert);
-        }
+        // fire rules on known facts
+        rulesEngine.fire(rules, facts);
 
         return true;
     }

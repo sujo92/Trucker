@@ -22,7 +22,7 @@ public class VehicleReadingController {
     @PostMapping("/reading")
     @ApiOperation(value = "save reading")
     public boolean saveReading(@RequestBody VehicleReading vehicleReading){
-        System.out.println("controller: save reading`");
+//        System.out.println("controller: save reading`");
         vehicleReadingService.saveReading(vehicleReading);
         return true;
     }

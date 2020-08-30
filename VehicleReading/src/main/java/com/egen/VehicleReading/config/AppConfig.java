@@ -1,5 +1,9 @@
 package com.egen.VehicleReading.config;
 
+import org.jeasy.rules.api.Facts;
+import org.jeasy.rules.api.Rules;
+import org.jeasy.rules.api.RulesEngine;
+import org.jeasy.rules.core.DefaultRulesEngine;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestTemplate;
@@ -11,4 +15,20 @@ public class AppConfig {
     public RestTemplate getRestTemplate() {
         return new RestTemplate();
     }
+
+    @Bean
+    public Facts getFact(){
+        return new Facts();
+    }
+
+    @Bean
+    public Rules getRules() {
+        return new Rules();
+    }
+
+    @Bean
+    public RulesEngine getRulesEngine() {
+        return new DefaultRulesEngine();
+    }
+
 }
