@@ -1,5 +1,6 @@
 package com.egen.Trucker.service.Impl;
 
+import com.egen.Trucker.exceptions.ResourceNotFoundException;
 import com.egen.Trucker.model.Vehicle;
 import com.egen.Trucker.repo.VehicleRepository;
 import com.egen.Trucker.service.VehicleService;
@@ -12,12 +13,13 @@ import java.util.Optional;
 
 @Service
 public class DefaultVehicleService implements VehicleService {
+    @Autowired
     VehicleRepository vehicleRepository;
 
-    @Autowired
-    public DefaultVehicleService(VehicleRepository vehicleRepository){
-        this.vehicleRepository = vehicleRepository;
-    }
+//    @Autowired
+//    public DefaultVehicleService(VehicleRepository vehicleRepository){
+//        this.vehicleRepository = vehicleRepository;
+//    }
 
     @Override
     public boolean addVehicleData(Vehicle[] vehicle) {
@@ -37,9 +39,11 @@ public class DefaultVehicleService implements VehicleService {
     }
 
     @Override
-    public Optional<Vehicle> getVehicleByVin(String vin) {
+    public Vehicle getVehicleByVin(String vin) {
         Optional<Vehicle> vehicle = vehicleRepository.findById(vin);
-        return vehicle;
+        if(!vehicle.isPresent())
+            throw new ResourceNotFoundException("Vehicle with vin"+vin+"doesnt exist");
+        return vehicle.get();
     }
 
 
