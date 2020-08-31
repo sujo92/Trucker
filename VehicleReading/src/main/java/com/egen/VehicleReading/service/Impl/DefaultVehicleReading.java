@@ -14,12 +14,15 @@ import java.util.List;
 public class DefaultVehicleReading implements VehicleReadingService {
     @Autowired
     VehicleRepository vehicleRepository;
-    @Autowired
+
     RestTemplate restTemplate;
+
     @Autowired
     AsyncAlertCreator asyncAlertCreatorObject;
 
-    public DefaultVehicleReading(){}
+    public DefaultVehicleReading(RestTemplate restTemplate){
+        this.restTemplate=restTemplate;
+    }
 
     @Override
     public boolean saveReading(VehicleReading vehicleReading) {
