@@ -17,7 +17,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.sql.Timestamp;
-import java.time.Clock;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -26,15 +25,10 @@ import java.util.Optional;
 public class DefaultVehicleServiceTest {
 
     @TestConfiguration
-    static class EmployeeServiceImplTestConfig{
+    static class VehicleServiceImplTestConfig{
         @Bean
         public VehicleService getService() {
             return new DefaultVehicleService();
-        }
-
-        @Bean
-        public Clock getClock(){
-            return Clock.systemDefaultZone();
         }
     }
 
