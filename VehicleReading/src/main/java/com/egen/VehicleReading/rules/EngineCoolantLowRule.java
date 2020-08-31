@@ -15,7 +15,7 @@ public class EngineCoolantLowRule {
 
     public EngineCoolantLowRule(VehicleReading vehicleReading, AlertRepository alertRepository){
         this.vehicleReading=vehicleReading;
-        this.alertRepository = alertRepository;
+        this.alertRepository=alertRepository;
     }
 
     @Condition
