@@ -9,24 +9,17 @@ import org.springframework.stereotype.Service;
 
 import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class DefaultVehicleService implements VehicleService {
     @Autowired
     VehicleRepository vehicleRepository;
 
-//    @Autowired
-//    public DefaultVehicleService(VehicleRepository vehicleRepository){
-//        this.vehicleRepository = vehicleRepository;
-//    }
-
     @Override
     public boolean addVehicleData(Vehicle[] vehicle) {
         System.out.println("service: put vehicles");
         for(Vehicle v: vehicle ) {
             vehicleRepository.save(v);
-            System.out.println(v);
         }
         return true;
     }
@@ -40,11 +33,7 @@ public class DefaultVehicleService implements VehicleService {
 
     @Override
     public Vehicle getVehicleByVin(String vin) {
-        Optional<Vehicle> vehicle = vehicleRepository.findById(vin);
-        if(!vehicle.isPresent())
-            throw new ResourceNotFoundException("Vehicle with vin"+vin+"doesnt exist");
-        return vehicle.get();
+        return vehicleRepository.findById(vin)
+                .orElseThrow(()-> new ResourceNotFoundException("Vehicle with vin"+vin+"doesnt exist"));
     }
-
-
 }
