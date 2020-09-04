@@ -15,13 +15,18 @@ public class DefaultVehicleReading implements VehicleReadingService {
     @Autowired
     VehicleRepository vehicleRepository;
 
+    @Autowired
     RestTemplate restTemplate;
 
     @Autowired
-    AsyncAlertCreator asyncAlertCreatorObject;
+    AlertCreator alertCreatorObject;
 
-    public DefaultVehicleReading(RestTemplate restTemplate){
-        this.restTemplate=restTemplate;
+    @Autowired
+    OldAlertsCreator oldAlertsCreator;
+
+
+    public DefaultVehicleReading(){
+
     }
 
     @Override
@@ -33,8 +38,8 @@ public class DefaultVehicleReading implements VehicleReadingService {
 
 
         System.out.println("Calling From rightWayToCall Thread " + Thread.currentThread().getName());
-        asyncAlertCreatorObject.createAlert(vehicleReading, v);
-
+//        alertCreatorObject.createAlert(vehicleReading, v);
+        oldAlertsCreator.createAlert(vehicleReading,v);
 
         return true;
     }

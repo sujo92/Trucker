@@ -19,6 +19,7 @@ public class AppConfig {
     }
 
     @Bean
+ //   @Scope("prototype")
     public Facts getFact(){
         return new Facts();
     }
