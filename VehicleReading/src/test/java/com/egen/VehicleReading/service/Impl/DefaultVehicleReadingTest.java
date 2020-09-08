@@ -40,4 +40,5 @@ public class DefaultVehicleReadingTest {
         List<VehicleReading> result = vehicleReadingService.getvehicleLocation(GetVehicleReading.getReading().getVin());
         Assert.assertEquals("list matches", list, result);
     }
+
 }

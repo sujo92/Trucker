@@ -39,7 +39,7 @@ public class DefaultVehicleReading implements VehicleReadingService {
 
 
 //        System.out.println("Calling From rightWayToCall Thread " + Thread.currentThread().getName());
-        System.out.println("alert:"+alertCreatorObject);
+//        System.out.println("alert:"+alertCreatorObject);
 //        alertCreatorObject.createAlert(vehicleReading, v);
         oldAlertsCreator.createAlert(vehicleReading,v);
 

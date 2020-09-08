@@ -30,4 +30,29 @@ public class GetVehicleReading {
 
         return vr;
     }
+
+    public static VehicleReading newVehicleReading(){
+        VehicleReading vr = new VehicleReading();
+
+        vr.setVin("5J6RM3H50DL032829");
+        vr.setLatitude(47.6031);
+        vr.setLongitude(-89.0608);
+        vr.setTimestamp(new Timestamp(1598799534));
+        vr.setFuelVolume(7);
+        vr.setSpeed(85);
+        vr.setEngineHp(369);
+        vr.setCheckEngineLightOn(false);
+        vr.setEngineCoolantLow(true);
+        vr.setCruiseControlOn(true);
+        vr.setEngineRpm(6126);
+
+        Tire t = new Tire();
+        t.setFrontLeft(25);
+        t.setFrontRight(36);
+        t.setRearLeft(35);
+        t.setRearRight(34);
+        vr.setTires(t);
+
+        return vr;
+    }
 }
