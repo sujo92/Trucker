@@ -17,7 +17,7 @@ public class DefaultVehicleService implements VehicleService {
 
     @Override
     public boolean addVehicleData(Vehicle[] vehicle) {
-        System.out.println("service: put vehicles");
+//        System.out.println("service: put vehicles");
         for(Vehicle v: vehicle ) {
             vehicleRepository.save(v);
         }
