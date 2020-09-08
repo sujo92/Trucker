@@ -14,7 +14,7 @@ public interface VehicleAlertRepository extends CrudRepository<VehicleAlert, Str
     @Query("SELECT a FROM VehicleAlert a WHERE a.vin = :vin")
     public List<VehicleAlert> findAllAlertsbyVin(@Param("vin") String vin);
 
-    @Query(value = "SELECT * FROM Trucker.VehicleAlert WHERE priority= 'High' AND `alert_time` > SUBDATE( CURRENT_TIMESTAMP , INTERVAL 2 HOUR)", nativeQuery = true)
+    @Query(value = "SELECT * FROM vehicle_alert WHERE priority= 'High' AND `alert_time` > SUBDATE( CURRENT_TIMESTAMP , INTERVAL 2 HOUR)", nativeQuery = true)
     public List<VehicleAlert> findAllHighAlerts();
 
 }
