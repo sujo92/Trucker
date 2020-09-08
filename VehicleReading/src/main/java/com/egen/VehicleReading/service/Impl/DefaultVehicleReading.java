@@ -4,6 +4,7 @@ import com.egen.VehicleReading.model.Vehicle;
 import com.egen.VehicleReading.model.VehicleReading;
 import com.egen.VehicleReading.repo.VehicleRepository;
 import com.egen.VehicleReading.service.VehicleReadingService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -24,20 +25,21 @@ public class DefaultVehicleReading implements VehicleReadingService {
     @Autowired
     OldAlertsCreator oldAlertsCreator;
 
-
-    public DefaultVehicleReading(){
-
+    public DefaultVehicleReading(VehicleRepository vehicleRepository, RestTemplate restTemplate) {
+        this.vehicleRepository =vehicleRepository;
+        this.restTemplate = restTemplate;
     }
 
     @Override
-    public boolean saveReading(VehicleReading vehicleReading) {
-        System.out.println(vehicleReading);
+    public boolean saveReading(VehicleReading vehicleReading) throws JsonProcessingException {
+//        System.out.println(vehicleReading);
         vehicleRepository.save(vehicleReading);
         String vin = vehicleReading.getVin();
         Vehicle v = restTemplate.getForObject("http://localhost:8001/api/vehicle/"+vin, Vehicle.class, boolean.class);
 
 
-        System.out.println("Calling From rightWayToCall Thread " + Thread.currentThread().getName());
+//        System.out.println("Calling From rightWayToCall Thread " + Thread.currentThread().getName());
+        System.out.println("alert:"+alertCreatorObject);
 //        alertCreatorObject.createAlert(vehicleReading, v);
         oldAlertsCreator.createAlert(vehicleReading,v);
 

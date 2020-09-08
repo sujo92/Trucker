@@ -1,9 +1,11 @@
 package com.egen.VehicleReading.config;
 
+import com.amazonaws.services.sns.AmazonSNS;
 import org.jeasy.rules.api.Facts;
 import org.jeasy.rules.api.Rules;
 import org.jeasy.rules.api.RulesEngine;
 import org.jeasy.rules.core.DefaultRulesEngine;
+import org.springframework.cloud.aws.messaging.core.NotificationMessagingTemplate;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableAsync;
@@ -32,6 +34,11 @@ public class AppConfig {
     @Bean
     public RulesEngine getRulesEngine() {
         return new DefaultRulesEngine();
+    }
+
+    @Bean
+    public NotificationMessagingTemplate notificationMessagingTemplate(AmazonSNS amazonSNS){
+        return new NotificationMessagingTemplate(amazonSNS);
     }
 
 }
