@@ -30,7 +30,7 @@ public class DefaultVehicleAlert implements VehicleAlertService {
 
     @Override
     public boolean saveAlert(VehicleAlert vehicleAlert) {
-        System.out.println("In service"+vehicleAlert);
+//        System.out.println("In service"+vehicleAlert);
         alertRepository.save(vehicleAlert);
         return true;
     }

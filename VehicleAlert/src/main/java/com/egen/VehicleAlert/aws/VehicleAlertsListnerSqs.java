@@ -61,7 +61,7 @@ public class VehicleAlertsListnerSqs {
 
     @PostConstruct
     private void postConstructor() {
-        System.out.println("SQS listening messages");
+//        System.out.println("SQS listening messages");
         AWSCredentialsProvider awsCredentialsProvider = new AWSStaticCredentialsProvider(
                 new BasicAWSCredentials(awsAccessKey, awsSecretKey)
         );
@@ -81,11 +81,11 @@ public class VehicleAlertsListnerSqs {
 
             for (Message messageObject : messages) {
                 String message = messageObject.getBody();
-//
+
                 SQSMessage sqsMessage  = objectMapper.readValue(message,SQSMessage.class);
                 VehicleAlert vehicleAlert = objectMapper.readValue(sqsMessage.getMessage(), VehicleAlert.class);
 
-                System.out.println("Vehicle Alert: " + vehicleAlert);
+//                System.out.println("Vehicle Alert: " + vehicleAlert);
                 vehicleAlertService.saveAlert(vehicleAlert);
                 deleteMessage(messageObject);
             }
